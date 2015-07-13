@@ -2,14 +2,12 @@ package com.parking;
 
 import com.parking.gate.EntryGate;
 import com.parking.gate.ExitGate;
-import com.parking.gate.Gate;
 import com.parking.slot.Slot;
 import com.parking.slot.SlotType;
 import com.parking.vehicle.Vehicle;
 import com.parking.vehicle.VehicleType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,10 +33,11 @@ public class ParkingLot {
 
     /**
      * ParkingLot is singleton class so only one instance should be created for this class
+     *
      * @return parkingLot
      */
-    public static synchronized ParkingLot getParkingLot(){
-        if (parkingLot == null){
+    public static synchronized ParkingLot getParkingLot() {
+        if (parkingLot == null) {
             parkingLot = new ParkingLot();
         }
         return parkingLot;
@@ -53,12 +52,11 @@ public class ParkingLot {
         initializeGates();
     }
 
-    public Slot park(Vehicle vehicle){
+    public Slot park(Vehicle vehicle) {
 
         Slot slot = null;
 
-        switch (vehicle.vehicleType())
-        {
+        switch (vehicle.vehicleType()) {
             case Motorcycle:
                 slot = park(vehicle, SlotType.Small);
                 break;
@@ -74,7 +72,7 @@ public class ParkingLot {
     }
 
     private synchronized Slot park(Vehicle vehicle, SlotType slotType) {
-        for (Slot slot : slots){
+        for (Slot slot : slots) {
             if (slotType == slot.getSlotType() && !slot.isOccupied()) {
                 slot.park();
                 occupiedSlots.put(vehicle.getNumberPlate(), slot);
@@ -85,14 +83,14 @@ public class ParkingLot {
     }
 
 
-    public synchronized void unPark(Vehicle vehicle){
+    public synchronized void unPark(Vehicle vehicle) {
 
         Slot slot = occupiedSlots.get(vehicle.getNumberPlate());
         if (slot == null) {
             return;
         }
         slot.unPark();
-        System.out.println("\nVehicle# "+ vehicle.getNumberPlate() + " is unparked");
+        System.out.println("\nVehicle# " + vehicle.getNumberPlate() + " is unparked");
     }
 
 
@@ -126,19 +124,19 @@ public class ParkingLot {
     }
 
     public EntryGate getEntryGate(int gateNumber) {
-         if (gateNumber > NUMBER_OF_ENTRY){
-             System.out.println("Invalid Gate Number. Should be between 1 and " + NUMBER_OF_ENTRY);
-             return null;
-         }
-        return entryGateList.get(gateNumber-1);
+        if (gateNumber > NUMBER_OF_ENTRY) {
+            System.out.println("Invalid Gate Number. Should be between 1 and " + NUMBER_OF_ENTRY);
+            return null;
+        }
+        return entryGateList.get(gateNumber - 1);
     }
 
     public ExitGate getExitGate(int gateNumber) {
-        if (gateNumber > NUMBER_OF_EXIT){
+        if (gateNumber > NUMBER_OF_EXIT) {
             System.out.println("Invalid Gate Number. Should be between 1 and " + NUMBER_OF_EXIT);
             return null;
         }
-        return exitGateList.get(gateNumber-1);
+        return exitGateList.get(gateNumber - 1);
     }
 
     public boolean allowedVehicle(Vehicle vehicle) {
@@ -156,7 +154,7 @@ public class ParkingLot {
         String unOccupiedMotoCycleSlots = "";
         String unOccupiedCarSlots = "";
         String unOccupiedBusSlots = "";
-        for (Slot slot : slots){
+        for (Slot slot : slots) {
             if (!slot.isOccupied()) {
                 if (slot.getSlotType() == SlotType.Small) {
                     ++smallSlotCount;
